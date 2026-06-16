@@ -1,0 +1,9 @@
+.direnv/
+result
+result-*
+
+__pycache__/
+*.py[cod]
+.ruff_cache/
+.marimo/
+.ipynb_checkpoints/
