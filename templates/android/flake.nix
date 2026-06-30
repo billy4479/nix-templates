@@ -54,6 +54,8 @@
             jdk21
             kotlin-language-server
             android-tools
+            qt6.qtbase
+            qt6.qtwayland
 
             (pkgs.writeShellScriptBin "create-avd" ''
               set -eu
@@ -75,6 +77,10 @@
 
             (pkgs.writeShellScriptBin "run-emulator" ''
               set -eu
+
+              # Google bundles Qt with xcb support. Override with
+              # ANDROID_EMULATOR_QT_QPA_PLATFORM if needed.
+              export QT_QPA_PLATFORM="''${ANDROID_EMULATOR_QT_QPA_PLATFORM:-xcb}"
 
               avd_name="''${1:-compose-api${platformVersion}}"
               if [ "$#" -gt 0 ]; then
