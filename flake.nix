@@ -30,6 +30,7 @@
                 templates/node/package.nix \
                 templates/svelte/flake.nix \
                 templates/svelte/package.nix \
+                templates/android/flake.nix \
                 templates/rust/flake.nix \
                 templates/zig/flake.nix \
                 templates/python-notebook/flake.nix \
@@ -63,6 +64,11 @@
         svelte = {
           path = ./templates/svelte;
           description = "SvelteKit application";
+        };
+
+        android = {
+          path = ./templates/android;
+          description = "Android Kotlin Jetpack Compose application";
         };
 
         rust = {
