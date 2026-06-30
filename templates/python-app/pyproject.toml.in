@@ -1,0 +1,11 @@
+[project]
+name = "__PROJECT_NAME__"
+version = "0.1.0"
+requires-python = ">=3.12"
+
+[project.scripts]
+__PROJECT_NAME__ = "__MODULE_NAME__:main"
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"

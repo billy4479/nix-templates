@@ -25,28 +25,6 @@
             (pkgs.writeShellScriptBin "prettier" ''
               exec pnpm exec prettier "$@"
             '')
-
-            (pkgs.writeShellScriptBin "init" ''
-              set -eu
-
-              if [ -d .git ]; then
-                echo "Refusing to initialize: .git already exists" >&2
-                exit 1
-              fi
-
-              tmp="$(mktemp -d)"
-              cleanup() {
-                rm -rf "$tmp"
-              }
-              trap cleanup EXIT
-
-              pnpm dlx sv create "$tmp" --template minimal --types ts --no-add-ons --install pnpm
-              cp -a "$tmp"/. .
-
-              git init
-              git add .
-              git commit -m "Initial commit"
-            '')
           ];
 
           nativeBuildInputs = with pkgs; [

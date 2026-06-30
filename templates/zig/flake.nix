@@ -41,20 +41,6 @@
         devShells.default = pkgs.mkShell {
           packages = with pkgs; [
             zls
-
-            (pkgs.writeShellScriptBin "init" ''
-              set -eu
-
-              if [ -d .git ]; then
-                echo "Refusing to initialize: .git already exists" >&2
-                exit 1
-              fi
-
-              zig init
-              git init
-              git add .
-              git commit -m "Initial commit"
-            '')
           ];
 
           nativeBuildInputs = with pkgs; [ zig ];

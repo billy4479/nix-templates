@@ -1,0 +1,60 @@
+#!/usr/bin/env sh
+set -eu
+
+if [ -d .git ]; then
+  echo "Refusing to initialize: .git already exists" >&2
+  exit 1
+fi
+
+project_name="$(basename "$PWD" | tr '[:upper:] _' '[:lower:]--')"
+package_suffix="$(printf '%s' "$project_name" | tr '-' '_' | tr -c '[:alnum:]_' '_' | sed 's/^_*//; s/_*$//')"
+case "$package_suffix" in
+  [0-9]*|"") package_suffix="app_$package_suffix" ;;
+esac
+package_name="${1:-com.example.$package_suffix}"
+
+package_dir="app/src/main/kotlin/$(printf '%s' "$package_name" | tr . /)"
+
+sed_escape() {
+  printf '%s' "$1" | sed 's/[\/&]/\\&/g'
+}
+
+project_name_escaped="$(sed_escape "$project_name")"
+package_name_escaped="$(sed_escape "$package_name")"
+android_home_escaped="$(sed_escape "$ANDROID_HOME")"
+
+render() {
+  sed \
+    -e "s/__PROJECT_NAME__/$project_name_escaped/g" \
+    -e "s/__PACKAGE_NAME__/$package_name_escaped/g" \
+    -e "s/__ANDROID_HOME__/$android_home_escaped/g" \
+    "$1" > "$2"
+}
+
+mkdir -p \
+  "$package_dir" \
+  app/src/main/res/values \
+  gradle
+
+render settings.gradle.kts.in settings.gradle.kts
+mv build.gradle.kts.in build.gradle.kts
+mv libs.versions.toml.in gradle/libs.versions.toml
+render app.build.gradle.kts.in app/build.gradle.kts
+mv AndroidManifest.xml.in app/src/main/AndroidManifest.xml
+render MainActivity.kt.in "$package_dir/MainActivity.kt"
+render strings.xml.in app/src/main/res/values/strings.xml
+mv styles.xml.in app/src/main/res/values/styles.xml
+mv gradle.properties.in gradle.properties
+render local.properties.in local.properties
+touch app/proguard-rules.pro
+
+rm -- \
+  settings.gradle.kts.in \
+  app.build.gradle.kts.in \
+  MainActivity.kt.in \
+  strings.xml.in \
+  local.properties.in
+rm -- "$0"
+git init
+git add .
+git commit -m "Initial commit"

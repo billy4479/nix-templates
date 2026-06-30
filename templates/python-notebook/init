@@ -1,0 +1,26 @@
+#!/usr/bin/env sh
+set -eu
+
+if [ -d .git ]; then
+  echo "Refusing to initialize: .git already exists" >&2
+  exit 1
+fi
+
+project_name="$(basename "$PWD")"
+notebook_name="${1:-$project_name.py}"
+
+if [ -e "$notebook_name" ]; then
+  echo "Refusing to overwrite $notebook_name" >&2
+  exit 1
+fi
+
+marimo_version="$(python -c 'import marimo; print(marimo.__version__)')"
+
+marimo_version_escaped="$(printf '%s' "$marimo_version" | sed 's/[\/&]/\\&/g')"
+sed "s/__MARIMO_VERSION__/$marimo_version_escaped/g" notebook.py.in > "$notebook_name"
+
+rm -- notebook.py.in
+rm -- "$0"
+git init
+git add .
+git commit -m "Initial commit"

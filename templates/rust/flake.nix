@@ -36,22 +36,6 @@
             rust-analyzer
             rustfmt
             clippy
-
-            (pkgs.writeShellScriptBin "init" ''
-              set -eu
-
-              if [ -d .git ]; then
-                echo "Refusing to initialize: .git already exists" >&2
-                exit 1
-              fi
-
-              project_name="$(basename "$PWD")"
-              cargo init --bin --name "$project_name" .
-              cargo generate-lockfile
-              git init
-              git add .
-              git commit -m "Initial commit"
-            '')
           ];
         };
       }
