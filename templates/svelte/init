@@ -20,7 +20,7 @@ result-*
 EOF >> "$tmp/.gitignore"
 cp -a "$tmp"/. .
 
-pnpm i -D prettier
+pnpm i -D prettier prettier-plugin-svelte
 
 
 rm -- "$0"
