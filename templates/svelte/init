@@ -13,7 +13,15 @@ cleanup() {
 trap cleanup EXIT
 
 pnpm dlx sv create "$tmp" --template minimal --types ts --no-add-ons --install pnpm
+cat << EOF
+.direnv/
+result
+result-*
+EOF >> "$tmp/.gitignore"
 cp -a "$tmp"/. .
+
+pnpm i -D prettier
+
 
 rm -- "$0"
 git init
