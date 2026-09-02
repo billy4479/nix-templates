@@ -9,6 +9,10 @@ fi
 project_name="$(basename "$PWD")"
 cargo init --bin --name "$project_name" .
 cargo generate-lockfile
+
+cat Cargo.toml.in >> Cargo.toml
+rm Cargo.toml.in
+
 rm -- "$0"
 git init
 git add .
