@@ -33,6 +33,7 @@
                 templates/android/flake.nix \
                 templates/rust/flake.nix \
                 templates/zig/flake.nix \
+                templates/cpp/flake.nix \
                 templates/python-notebook/flake.nix \
                 templates/python-app/flake.nix
             fi
@@ -79,6 +80,11 @@
         zig = {
           path = ./templates/zig;
           description = "Zig application";
+        };
+
+        cpp = {
+          path = ./templates/cpp;
+          description = "C++ application with CMake and Ninja";
         };
 
         python-notebook = {

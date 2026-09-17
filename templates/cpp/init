@@ -1,0 +1,38 @@
+#!/usr/bin/env sh
+set -eu
+
+if [ -d .git ]; then
+  echo "Refusing to initialize: .git already exists" >&2
+  exit 1
+fi
+
+project_name="$(basename "$PWD")"
+
+cat > CMakeLists.txt <<EOF
+cmake_minimum_required(VERSION 3.25)
+
+project($project_name VERSION 0.1.0 LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+add_executable($project_name src/main.cpp)
+
+target_compile_options($project_name PRIVATE -Wall -Wextra -Wpedantic)
+
+install(TARGETS $project_name)
+EOF
+
+mkdir -p src
+cat > src/main.cpp <<'EOF'
+#include <iostream>
+
+int main() { std::cout << "Hello, World!\n"; }
+EOF
+
+rm -- "$0"
+git init
+git add .
+git commit -m "Initial commit"
