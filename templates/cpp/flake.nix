@@ -48,7 +48,10 @@
             ninja
           ];
 
-          env.CMAKE_CXX_COMPILER_LAUNCHER = "ccache";
+          env = {
+            CMAKE_CXX_COMPILER_LAUNCHER = "ccache";
+            CMAKE_GENERATOR = "Ninja";
+          };
         };
       }
     );
